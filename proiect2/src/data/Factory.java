@@ -1,10 +1,7 @@
 package data;
 
 import common.Constants;
-import data.input.Child;
-import data.input.ChildUpdate;
-import data.input.Gift;
-import data.input.InputData;
+import data.input.*;
 import data.output.AnnualChildren;
 import data.output.ChildrenList;
 import lombok.NonNull;
@@ -27,18 +24,18 @@ public final class Factory {
         AnnualChildren children = new AnnualChildren();
 
         distributeAnnualPresents(inputData);
-        List<Child> childs = new ArrayList<>();
+        List<ChildDisplay> childs = new ArrayList<>();
         for (Child c : inputData.getInitialData().getChildren()) {
-            childs.add(new Child(c));
+            childs.add(new ChildDisplay(c));
         }
         children.addAnualChildList(new ChildrenList(childs));
 
         for (int i  = 1; i <= inputData.getNumberOfYears(); i++) {
             updateAnnualChanges(inputData, i - 1);
             distributeAnnualPresents(inputData);
-            List<Child> childs2 = new ArrayList<>();
+            List<ChildDisplay> childs2 = new ArrayList<>();
             for (Child c : inputData.getInitialData().getChildren()) {
-                childs2.add(new Child(c));
+                childs2.add(new ChildDisplay(c));
             }
             children.addAnualChildList(new ChildrenList(childs2));
         }
@@ -96,41 +93,11 @@ public final class Factory {
             child.clearReceivedGifts();
         }
         Double budgetUnit = inputData.getSantaBudget() / scoreSum;
+        List<Gift> santaGiftsList = inputData.getInitialData().getSantaGiftsList();
         for (Child child : inputData.getInitialData().getChildren()) {
             Double childBudget = budgetUnit * child.getAverageScore();
             child.setAssignedBudget(childBudget);
-            for (String giftCategory : child.getGiftsPreferences()) {
-                List<Gift> allGiftsFromCategory = getAllGiftsFromCategory(inputData, giftCategory);
-                sortGiftsByPriceAscending(allGiftsFromCategory);
-                if (allGiftsFromCategory.size() > 0) {
-                    if (allGiftsFromCategory.get(0).getPrice() <= childBudget) {
-                        child.getReceivedGifts().add(allGiftsFromCategory.get(0));
-                        childBudget -= allGiftsFromCategory.get(0).getPrice();
-                    }
-                }
-            }
+            Elf.assignGifts(child, santaGiftsList);
         }
-    }
-
-    private static void sortGiftsByPriceAscending(final List<Gift> allGiftsFromCategory) {
-        allGiftsFromCategory.sort((o1, o2) -> {
-            if (o1.getPrice() > o2.getPrice()) {
-                return 1;
-            } else if (o1.getPrice() < o2.getPrice()) {
-                return -1;
-            }
-            return 0;
-        });
-    }
-
-    private static List<Gift> getAllGiftsFromCategory(final InputData inputData,
-                                                      final String giftCategory) {
-        List<Gift> allGiftsFromCategory = new ArrayList<>();
-        for (Gift g : inputData.getInitialData().getSantaGiftsList()) {
-            if (g.getCategory().equals(giftCategory)) {
-                allGiftsFromCategory.add(g);
-            }
-        }
-        return allGiftsFromCategory;
     }
 }

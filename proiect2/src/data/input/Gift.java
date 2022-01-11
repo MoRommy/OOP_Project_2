@@ -6,7 +6,7 @@ public final class Gift {
     private final String productName;
     private final Double price;
     private final String category;
-    private final Integer quantity;
+    private Integer quantity;
 
     public Gift(@JsonProperty("productName") final String productName,
                 @JsonProperty("price") final Double price,
@@ -20,6 +20,10 @@ public final class Gift {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(final Integer quantity) {
+        this.quantity = quantity;
     }
 
     public String getProductName() {

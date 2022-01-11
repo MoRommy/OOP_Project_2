@@ -1,17 +1,17 @@
 package data.output;
 
-import data.input.Child;
+import data.input.ChildDisplay;
 
 import java.util.List;
 
 public final class ChildrenList {
-    private final List<Child> childrenList;
+    private final List<ChildDisplay> childrenList;
 
-    public ChildrenList(final List<Child> childrenList) {
+    public ChildrenList(final List<ChildDisplay> childrenList) {
         this.childrenList = childrenList;
     }
 
-    public List<Child> getChildren() {
+    public List<ChildDisplay> getChildren() {
         return childrenList;
     }
 }
