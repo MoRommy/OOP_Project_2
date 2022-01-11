@@ -72,3 +72,7 @@ fabric.properties
 
 # Exclude this from ignore
 !checkstyle*.jar
+proiect2/output/out_1.json
+proiect2/output/out_10.json
+proiect2/output/out_11.json
+*.json

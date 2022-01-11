@@ -7,6 +7,13 @@ public final class ChildUpdate {
     private Integer id;
     private Double niceScore;
     private List<String> giftsPreferences = new ArrayList<>();
+    private final String elf = new String();
+
+
+
+    public String getElf() {
+        return elf;
+    }
 
     public Integer getId() {
         return id;

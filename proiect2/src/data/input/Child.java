@@ -14,9 +14,11 @@ public class Child {
     private Integer age;
     private List<String> giftsPreferences;
     private Double averageScore;
+    private final Double niceScoreBonus;
     private List<Double> niceScoreHistory = new ArrayList<>();
     private Double assignedBudget;
     private List<Gift> receivedGifts = new ArrayList<>();
+    private String elf;
 
     public Child(final Child c) {
         this.id = c.getId();
@@ -29,6 +31,8 @@ public class Child {
         this.niceScoreHistory = new ArrayList<>(c.getNiceScoreHistory());
         this.assignedBudget = c.getAssignedBudget();
         this.receivedGifts = new ArrayList<>(c.getReceivedGifts());
+        this.niceScoreBonus = c.getNiceScoreBonus();
+        this.elf = c.getElf();
     }
 
     public Child(@JsonProperty("id") final Integer id,
@@ -37,7 +41,9 @@ public class Child {
                  @JsonProperty("city") final String city,
                  @JsonProperty("age") final Integer age,
                  @JsonProperty("giftsPreferences") final List<String> giftsPreferences,
-                 @JsonProperty("niceScore") final Double niceScore) {
+                 @JsonProperty("niceScore") final Double niceScore,
+                 @JsonProperty("niceScoreBonus") final Double niceScoreBonus,
+                 @JsonProperty("elf") final String elf) {
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -45,16 +51,33 @@ public class Child {
         this.age = age;
         this.giftsPreferences = giftsPreferences;
         addNiceScore(niceScore);
+        this.niceScoreBonus = niceScoreBonus;
+        this.elf = elf;
     }
 
     /**
      *
-     * @param niceScore nice score
+     * @param niceScore niceScore
      */
     public final void addNiceScore(final Double niceScore) {
         if (niceScore != null) {
             this.niceScoreHistory.add(niceScore);
         }
+    }
+
+    /**
+     *
+     * @return niceScoreBonus
+     */
+    public final Double getNiceScoreBonus() {
+        if (niceScoreBonus != null) {
+            return niceScoreBonus;
+        }
+        return 0.0;
+    }
+
+    private String getElf() {
+        return elf;
     }
 
     public final Integer getId() {

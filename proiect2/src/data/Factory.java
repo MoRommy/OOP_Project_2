@@ -100,20 +100,8 @@ public final class Factory {
             Double childBudget = budgetUnit * child.getAverageScore();
             child.setAssignedBudget(childBudget);
             for (String giftCategory : child.getGiftsPreferences()) {
-                List<Gift> allGiftsFromCategory = new ArrayList<>();
-                for (Gift g : inputData.getInitialData().getSantaGiftsList()) {
-                    if (g.getCategory().equals(giftCategory)) {
-                        allGiftsFromCategory.add(g);
-                    }
-                }
-                allGiftsFromCategory.sort((o1, o2) -> {
-                    if (o1.getPrice() > o2.getPrice()) {
-                        return 1;
-                    } else if (o1.getPrice() < o2.getPrice()) {
-                        return -1;
-                    }
-                    return 0;
-                });
+                List<Gift> allGiftsFromCategory = getAllGiftsFromCategory(inputData, giftCategory);
+                sortGiftsByPriceAscending(allGiftsFromCategory);
                 if (allGiftsFromCategory.size() > 0) {
                     if (allGiftsFromCategory.get(0).getPrice() <= childBudget) {
                         child.getReceivedGifts().add(allGiftsFromCategory.get(0));
@@ -122,5 +110,27 @@ public final class Factory {
                 }
             }
         }
+    }
+
+    private static void sortGiftsByPriceAscending(final List<Gift> allGiftsFromCategory) {
+        allGiftsFromCategory.sort((o1, o2) -> {
+            if (o1.getPrice() > o2.getPrice()) {
+                return 1;
+            } else if (o1.getPrice() < o2.getPrice()) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+
+    private static List<Gift> getAllGiftsFromCategory(final InputData inputData,
+                                                      final String giftCategory) {
+        List<Gift> allGiftsFromCategory = new ArrayList<>();
+        for (Gift g : inputData.getInitialData().getSantaGiftsList()) {
+            if (g.getCategory().equals(giftCategory)) {
+                allGiftsFromCategory.add(g);
+            }
+        }
+        return allGiftsFromCategory;
     }
 }
