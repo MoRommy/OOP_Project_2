@@ -40,7 +40,7 @@ public class Elf {
                                                       final String giftCategory) {
         List<Gift> allGiftsFromCategory = new ArrayList<>();
         for (Gift g : santaGiftsList) {
-            if (g.getCategory().equals(giftCategory)) {
+            if (g.getCategory().equals(giftCategory) && g.getQuantity() > 0) {
                 allGiftsFromCategory.add(g);
             }
         }
