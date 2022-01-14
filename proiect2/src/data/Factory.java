@@ -6,10 +6,7 @@ import data.output.AnnualChildren;
 import data.output.ChildrenList;
 import lombok.NonNull;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 public final class Factory {
     private Factory() {
@@ -22,8 +19,8 @@ public final class Factory {
      */
     public static AnnualChildren processData(final InputData inputData) {
         AnnualChildren children = new AnnualChildren();
-
-        distributeAnnualPresents(inputData);
+        distributeAnnualPresents(inputData, -1);
+        inputData.getInitialData().getChildren().sort(Comparator.comparing(Child::getId));
         List<ChildDisplay> childs = new ArrayList<>();
         for (Child c : inputData.getInitialData().getChildren()) {
             childs.add(new ChildDisplay(c));
@@ -32,7 +29,8 @@ public final class Factory {
 
         for (int i  = 1; i <= inputData.getNumberOfYears(); i++) {
             updateAnnualChanges(inputData, i - 1);
-            distributeAnnualPresents(inputData);
+            distributeAnnualPresents(inputData, i - 1);
+            inputData.getInitialData().getChildren().sort(Comparator.comparing(Child::getId));
             List<ChildDisplay> childs2 = new ArrayList<>();
             for (Child c : inputData.getInitialData().getChildren()) {
                 childs2.add(new ChildDisplay(c));
@@ -63,8 +61,11 @@ public final class Factory {
             }
         }
 
-        //update children
-        for (ChildUpdate childUpdate:inputData.getAnnualChanges().get(year).getChildrenUpdates()) {
+        updateChildren(inputData, year);
+    }
+
+    private static void updateChildren(InputData inputData, int year) {
+        for (ChildUpdate childUpdate: inputData.getAnnualChanges().get(year).getChildrenUpdates()) {
             for (Child child : inputData.getInitialData().getChildren()) {
                 if (child.getId().equals(childUpdate.getId())) {
                     //add nice score
@@ -83,7 +84,8 @@ public final class Factory {
         }
     }
 
-    private static void distributeAnnualPresents(@NonNull final InputData inputData) {
+    private static void distributeAnnualPresents(@NonNull final InputData inputData,
+                                                                            final Integer year) {
         Double scoreSum = 0.0;
         inputData.getInitialData().getChildren().removeIf(
                 child -> child.getAge() > Constants.TEEN_END_YEAR);
@@ -94,10 +96,33 @@ public final class Factory {
         }
         Double budgetUnit = inputData.getSantaBudget() / scoreSum;
         List<Gift> santaGiftsList = inputData.getInitialData().getSantaGiftsList();
-        for (Child child : inputData.getInitialData().getChildren()) {
+        System.out.println("year: " + (year + 1));
+        System.out.println("budgetUnit: " + budgetUnit);
+        List<Child> childs = getChildListByStrategy(inputData, year);
+        for (Child child : childs) {
             Double childBudget = budgetUnit * child.getAverageScore();
             child.setAssignedBudget(childBudget);
+            System.out.println("    " + child.getId() + ": " + childBudget);
             Elf.assignGifts(child, santaGiftsList);
         }
+        System.out.println();
+    }
+
+    private static List<Child> getChildListByStrategy(final InputData inputData,
+                                                                            final Integer year) {
+
+        List<Child> childList = inputData.getInitialData().getChildren();
+        if (year == -1) {
+            return childList;
+        }
+        String strategy = inputData.getAnnualChanges().get(year).getStrategy();
+        switch (strategy) {
+            case "id" : return childList;
+            case "niceScore" : {
+                childList.sort(Comparator.comparing(Child::getAverageScore).reversed());
+                System.out.println("sort completed");
+            }
+        }
+        return childList;
     }
 }
