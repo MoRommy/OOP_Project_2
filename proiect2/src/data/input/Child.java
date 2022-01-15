@@ -153,6 +153,16 @@ public class Child {
         } else if (getAge() <= Constants.TEEN_END_YEAR) {
             this.averageScore = calculateWeightAverageScore();
         }
+        addNiceScoreBonus();
+    }
+
+    private void addNiceScoreBonus() {
+        if (niceScoreBonus > 0) {
+            this.averageScore += averageScore + (niceScoreBonus / Constants.ONE_HUNDRED);
+            if (this.averageScore > Constants.MAX_SCORE) {
+                this.averageScore = Constants.MAX_SCORE;
+            }
+        }
     }
 
     public final List<Double> getNiceScoreHistory() {
