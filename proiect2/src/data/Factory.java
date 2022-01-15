@@ -134,7 +134,34 @@ public final class Factory {
     private static List<Child> sortByNiceScoreCity(final List<Child> childList) {
         HashMap<String, Double> cityAverageScore = new HashMap<>();
         HashMap<String, Integer> numberOfCitizens = new HashMap<>();
+        getCityScores(childList, cityAverageScore, numberOfCitizens);
+        sortChildsByCity(childList, cityAverageScore);
+        return childList;
+    }
 
+    private static void sortChildsByCity(final List<Child> childList,
+                                                final HashMap<String, Double> cityAverageScore) {
+        childList.sort((o1, o2) -> {
+            if (cityAverageScore.get(o1.getCity()) > cityAverageScore.get(o2.getCity())) {
+                return -1;
+            } else if (cityAverageScore.get(o1.getCity()) < cityAverageScore.get(o2.getCity())) {
+                return 1;
+            } else {
+                return o1.getCity().compareTo(o2.getCity());
+            }
+        });
+    }
+
+    private static void getCityScores(final List<Child> childList,
+                                      final HashMap<String, Double> cityAverageScore,
+                                      final HashMap<String, Integer> numberOfCitizens) {
+        addCitiesScore(childList, cityAverageScore, numberOfCitizens);
+        setAverageScore(cityAverageScore, numberOfCitizens);
+    }
+
+    private static void addCitiesScore(final List<Child> childList,
+                                       final HashMap<String, Double> cityAverageScore,
+                                       final HashMap<String, Integer> numberOfCitizens) {
         for (Child c : childList) {
             if (cityAverageScore.containsKey(c.getCity())) {
                 cityAverageScore.replace(c.getCity(),
@@ -145,22 +172,14 @@ public final class Factory {
                 numberOfCitizens.put(c.getCity(), 1);
             }
         }
+    }
 
+    private static void setAverageScore(final HashMap<String, Double> cityAverageScore,
+                                        final HashMap<String, Integer> numberOfCitizens) {
         for (Map.Entry<String, Double> mapElement : cityAverageScore.entrySet()) {
             String city = mapElement.getKey();
             Double score = mapElement.getValue();
             cityAverageScore.replace(city, score / numberOfCitizens.get(city));
         }
-
-        childList.sort((o1, o2) -> {
-            if (cityAverageScore.get(o1.getCity()) > cityAverageScore.get(o2.getCity())) {
-                return -1;
-            } else if (cityAverageScore.get(o1.getCity()) < cityAverageScore.get(o2.getCity())) {
-                return 1;
-            } else {
-                return o1.getCity().compareTo(o2.getCity());
-            }
-        });
-        return childList;
     }
 }

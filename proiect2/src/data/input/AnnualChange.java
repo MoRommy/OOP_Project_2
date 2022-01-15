@@ -4,13 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public final class AnnualChange {
-    private final Double newSantaBudget;
-    private final List<Gift> newGifts;
-    private final List<Child> newChildren;
-    private final List<ChildUpdate> childrenUpdates;
-    private final String strategy;
-
+public record AnnualChange(Double newSantaBudget, List<Gift> newGifts,
+                           List<Child> newChildren,
+                           List<ChildUpdate> childrenUpdates, String strategy) {
     public AnnualChange(@JsonProperty("newSantaBudget") final Double newSantaBudget,
                         @JsonProperty("newGifts") final List<Gift> newGifts,
                         @JsonProperty("newChildren") final List<Child> newChildren,

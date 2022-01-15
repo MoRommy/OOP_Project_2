@@ -81,13 +81,6 @@ public final class Elf {
         if (lowestPriceGift != null) {
             child.giveGift(lowestPriceGift);
         }
-        for (Gift gift : santaGifts) {
-            if (gift.getPrice() < lowestPrice) {
-                lowestPrice = gift.getPrice();
-                lowestPriceGift = gift;
-            }
-        }
-        child.giveGift(lowestPriceGift);
     }
 
     private static Double getElfBudget(final Child child) {
