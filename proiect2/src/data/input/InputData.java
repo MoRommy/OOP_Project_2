@@ -8,7 +8,7 @@ public final class InputData {
     private Double santaBudget;
     private InitialData initialData;
     private List<AnnualChange> annualChanges = new ArrayList<>();
-    private List<Integer> childrenOrder = new ArrayList<>();
+    private final List<Integer> childrenOrder = new ArrayList<>();
 
     public List<Integer> getChildrenOrder() {
         return childrenOrder;

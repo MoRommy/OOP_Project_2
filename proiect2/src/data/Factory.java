@@ -1,12 +1,22 @@
 package data;
 
 import common.Constants;
-import data.input.*;
+import data.input.Child;
+import data.input.ChildDisplay;
+import data.input.ChildUpdate;
+import data.input.Elf;
+import data.input.Gift;
+import data.input.InputData;
 import data.output.AnnualChildren;
 import data.output.ChildrenList;
 import lombok.NonNull;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
 public final class Factory {
     private Factory() {
@@ -76,9 +86,9 @@ public final class Factory {
                     for (String giftPreference : childUpdate.getGiftsPreferences()) {
                         child.getGiftsPreferences().add(0, giftPreference);
                     }
-                        child.setGiftsPreferences(new ArrayList<>(
+                    child.setGiftsPreferences(new ArrayList<>(
                                 new LinkedHashSet<>(child.getGiftsPreferences())));
-
+                    child.setElf(childUpdate.getElf());
                 }
             }
         }
@@ -96,16 +106,12 @@ public final class Factory {
         }
         Double budgetUnit = inputData.getSantaBudget() / scoreSum;
         List<Gift> santaGiftsList = inputData.getInitialData().getSantaGiftsList();
-        //System.out.println("year: " + (year + 1));
-        //System.out.println("budgetUnit: " + budgetUnit);
         List<Child> childs = getChildListByStrategy(inputData, year);
         for (Child child : childs) {
             Double childBudget = budgetUnit * child.getAverageScore();
             child.setAssignedBudget(childBudget);
-            //System.out.println("    " + child.getId() + ": " + childBudget);
             Elf.assignGifts(child, santaGiftsList);
         }
-        //System.out.println();
     }
 
     private static List<Child> getChildListByStrategy(final InputData inputData,
@@ -151,8 +157,9 @@ public final class Factory {
                 return -1;
             } else if (cityAverageScore.get(o1.getCity()) < cityAverageScore.get(o2.getCity())) {
                 return 1;
+            } else {
+                return o1.getCity().compareTo(o2.getCity());
             }
-            return 0;
         });
         return childList;
     }

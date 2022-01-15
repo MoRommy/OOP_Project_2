@@ -95,10 +95,12 @@ public final class Elf {
         Double assignedBudget = child.getAssignedBudget();
         switch (elf) {
             case "black" -> {
-                return assignedBudget + Constants.BLACK_ELF_VALUE * assignedBudget;
+                assignedBudget +=
+                        (Constants.BLACK_ELF_VALUE * assignedBudget) / Constants.ONE_HUNDRED;
             }
             case "pink" -> {
-                return assignedBudget + Constants.PINK_ELF_VALUE * assignedBudget;
+                assignedBudget +=
+                        (Constants.PINK_ELF_VALUE * assignedBudget) / Constants.ONE_HUNDRED;
             }
             default -> {
             }

@@ -80,6 +80,10 @@ public class Child {
         return elf;
     }
 
+    public final void setElf(final String elf) {
+        this.elf = elf;
+    }
+
     public final Integer getId() {
         return id;
     }
@@ -158,7 +162,7 @@ public class Child {
 
     private void addNiceScoreBonus() {
         if (niceScoreBonus > 0) {
-            this.averageScore += averageScore + (niceScoreBonus / Constants.ONE_HUNDRED);
+            this.averageScore += (averageScore * niceScoreBonus) / Constants.ONE_HUNDRED;
             if (this.averageScore > Constants.MAX_SCORE) {
                 this.averageScore = Constants.MAX_SCORE;
             }
