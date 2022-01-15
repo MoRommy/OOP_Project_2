@@ -14,6 +14,9 @@ public final class Constants {
     public static final Integer KID_END_YEAR = 12;
     public static final Integer TEEN_END_YEAR = 18;
     public static final Double MAX_SCORE = 10.0;
+    public static final Double INFINITE_VALUE = 9999999.9;
+    public static final Double BLACK_ELF_VALUE = -(double) (30 / 100);
+    public static final Double PINK_ELF_VALUE = (double) (30 / 100);
 
     private Constants() {
         //constructor for checkstyle

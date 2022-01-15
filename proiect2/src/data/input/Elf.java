@@ -1,17 +1,27 @@
 package data.input;
 
+import common.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Elf {
+public final class Elf {
+    private Elf() {
 
-    public static void assignGifts(Child child, List<Gift> santaGifts) {
+    }
+
+    /**
+     *
+     * @param child c
+     * @param santaGifts s
+     */
+    public static void assignGifts(final Child child, final List<Gift> santaGifts) {
         child.setAssignedBudget(getElfBudget(child));
         assignSantaGifts(child, santaGifts);
         assignElfGifts(child, santaGifts, child.getElf());
     }
 
-    private static void assignSantaGifts(Child child, List<Gift> santaGifts) {
+    private static void assignSantaGifts(final Child child, final List<Gift> santaGifts) {
         Double childBudget = child.getAssignedBudget();
         for (String giftCategory : child.getGiftsPreferences()) {
             List<Gift> gifts = getAllGiftsFromCategory(santaGifts, giftCategory);
@@ -47,19 +57,18 @@ public class Elf {
         return allGiftsFromCategory;
     }
 
-    private static void assignElfGifts(Child child, List<Gift> santaGifts, String elf) {
-        switch (elf) {
-            case "yellow" -> {
-                if (child.getReceivedGifts().size() == 0) {
-                    assignFavouriteGift(child, santaGifts);
-                }
+    private static void assignElfGifts(final Child child, final List<Gift> santaGifts,
+                                                                            final String elf) {
+        if ("yellow".equals(elf)) {
+            if (child.getReceivedGifts().size() == 0) {
+                assignFavouriteGift(child, santaGifts);
             }
         }
     }
 
-    private static void assignFavouriteGift(Child child, List<Gift> santaGifts) {
+    private static void assignFavouriteGift(final Child child, final List<Gift> santaGifts) {
         String favouriteCategory = child.getGiftsPreferences().get(0);
-        Double lowestPrice = 9999999.9;
+        Double lowestPrice = Constants.INFINITE_VALUE;
         Gift lowestPriceGift = null;
         for (Gift gift: santaGifts) {
             if (gift.getCategory().equals(favouriteCategory)) {
@@ -81,15 +90,17 @@ public class Elf {
         child.giveGift(lowestPriceGift);
     }
 
-    private static Double getElfBudget(Child child) {
+    private static Double getElfBudget(final Child child) {
         String elf = child.getElf();
         Double assignedBudget = child.getAssignedBudget();
         switch (elf) {
             case "black" -> {
-                return assignedBudget - (30 / 100) * assignedBudget;
+                return assignedBudget + Constants.BLACK_ELF_VALUE * assignedBudget;
             }
             case "pink" -> {
-                return assignedBudget + (30 / 100) * assignedBudget;
+                return assignedBudget + Constants.PINK_ELF_VALUE * assignedBudget;
+            }
+            default -> {
             }
         }
         return assignedBudget;

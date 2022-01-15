@@ -31,43 +31,43 @@ public class ChildDisplay {
         }
     }
 
-    public Integer getId() {
+    public final Integer getId() {
         return id;
     }
 
-    public String getLastName() {
+    public final String getLastName() {
         return lastName;
     }
 
-    public String getFirstName() {
+    public final String getFirstName() {
         return firstName;
     }
 
-    public String getCity() {
+    public final String getCity() {
         return city;
     }
 
-    public Integer getAge() {
+    public final Integer getAge() {
         return age;
     }
 
-    public List<String> getGiftsPreferences() {
+    public final List<String> getGiftsPreferences() {
         return giftsPreferences;
     }
 
-    public Double getAverageScore() {
+    public final Double getAverageScore() {
         return averageScore;
     }
 
-    public List<Double> getNiceScoreHistory() {
+    public final List<Double> getNiceScoreHistory() {
         return niceScoreHistory;
     }
 
-    public Double getAssignedBudget() {
+    public final Double getAssignedBudget() {
         return assignedBudget;
     }
 
-    public List<GiftDisplay> getReceivedGifts() {
+    public final List<GiftDisplay> getReceivedGifts() {
         return receivedGifts;
     }
 }

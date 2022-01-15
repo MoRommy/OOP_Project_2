@@ -76,7 +76,7 @@ public class Child {
         return 0.0;
     }
 
-    public String getElf() {
+    public final String getElf() {
         return elf;
     }
 
@@ -186,7 +186,11 @@ public class Child {
         this.receivedGifts = new ArrayList<>();
     }
 
-    public void giveGift(Gift gift) {
+    /**
+     *
+     * @param gift gift
+     */
+    public final void giveGift(final Gift gift) {
         if (gift != null) {
            if (gift.getQuantity() > 0) {
                this.getReceivedGifts().add(gift);

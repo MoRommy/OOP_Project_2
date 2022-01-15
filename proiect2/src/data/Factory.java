@@ -64,7 +64,7 @@ public final class Factory {
         updateChildren(inputData, year);
     }
 
-    private static void updateChildren(InputData inputData, int year) {
+    private static void updateChildren(final InputData inputData, final int year) {
         for (ChildUpdate childUpdate: inputData.getAnnualChanges().get(year).getChildrenUpdates()) {
             for (Child child : inputData.getInitialData().getChildren()) {
                 if (child.getId().equals(childUpdate.getId())) {
@@ -116,23 +116,23 @@ public final class Factory {
         }
         String strategy = inputData.getAnnualChanges().get(year).getStrategy();
         switch (strategy) {
-            case "id" : return childList;
-            case "niceScore" : {
+            case "niceScore" :
                 childList.sort(Comparator.comparing(Child::getAverageScore).reversed());
                 break;
-            }
             case "niceScoreCity" : return sortByNiceScoreCity(childList);
+            default : return childList;
         }
         return childList;
     }
 
-    private static List<Child> sortByNiceScoreCity(List<Child> childList) {
+    private static List<Child> sortByNiceScoreCity(final List<Child> childList) {
         HashMap<String, Double> cityAverageScore = new HashMap<>();
         HashMap<String, Integer> numberOfCitizens = new HashMap<>();
 
         for (Child c : childList) {
             if (cityAverageScore.containsKey(c.getCity())) {
-                cityAverageScore.replace(c.getCity(), cityAverageScore.get(c.getCity()) + c.getAverageScore());
+                cityAverageScore.replace(c.getCity(),
+                                        cityAverageScore.get(c.getCity()) + c.getAverageScore());
                 numberOfCitizens.replace(c.getCity(), numberOfCitizens.get(c.getCity()) + 1);
             } else {
                 cityAverageScore.put(c.getCity(), c.getAverageScore());
