@@ -4,7 +4,6 @@ import checker.Checker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import common.Constants;
 import data.Factory;
 import data.input.InputData;
 import data.output.AnnualChildren;
@@ -27,7 +26,7 @@ public final class Main {
      */
     public static void main(final String[] args) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        for (int i = 1; i <= Constants.TESTS_NUMBER; i++) {
+        for (int i = 1; i <= 30/*Constants.TESTS_NUMBER*/; i++) {
             InputData inputData = objectMapper.readValue(
                     new File("tests/test" + i + ".json"), InputData.class);
             AnnualChildren annualChildren = Factory.processData(inputData);

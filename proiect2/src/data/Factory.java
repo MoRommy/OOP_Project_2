@@ -96,21 +96,20 @@ public final class Factory {
         }
         Double budgetUnit = inputData.getSantaBudget() / scoreSum;
         List<Gift> santaGiftsList = inputData.getInitialData().getSantaGiftsList();
-        System.out.println("year: " + (year + 1));
-        System.out.println("budgetUnit: " + budgetUnit);
+        //System.out.println("year: " + (year + 1));
+        //System.out.println("budgetUnit: " + budgetUnit);
         List<Child> childs = getChildListByStrategy(inputData, year);
         for (Child child : childs) {
             Double childBudget = budgetUnit * child.getAverageScore();
             child.setAssignedBudget(childBudget);
-            System.out.println("    " + child.getId() + ": " + childBudget);
+            //System.out.println("    " + child.getId() + ": " + childBudget);
             Elf.assignGifts(child, santaGiftsList);
         }
-        System.out.println();
+        //System.out.println();
     }
 
     private static List<Child> getChildListByStrategy(final InputData inputData,
                                                                             final Integer year) {
-
         List<Child> childList = inputData.getInitialData().getChildren();
         if (year == -1) {
             return childList;
@@ -120,9 +119,41 @@ public final class Factory {
             case "id" : return childList;
             case "niceScore" : {
                 childList.sort(Comparator.comparing(Child::getAverageScore).reversed());
-                System.out.println("sort completed");
+                break;
+            }
+            case "niceScoreCity" : return sortByNiceScoreCity(childList);
+        }
+        return childList;
+    }
+
+    private static List<Child> sortByNiceScoreCity(List<Child> childList) {
+        HashMap<String, Double> cityAverageScore = new HashMap<>();
+        HashMap<String, Integer> numberOfCitizens = new HashMap<>();
+
+        for (Child c : childList) {
+            if (cityAverageScore.containsKey(c.getCity())) {
+                cityAverageScore.replace(c.getCity(), cityAverageScore.get(c.getCity()) + c.getAverageScore());
+                numberOfCitizens.replace(c.getCity(), numberOfCitizens.get(c.getCity()) + 1);
+            } else {
+                cityAverageScore.put(c.getCity(), c.getAverageScore());
+                numberOfCitizens.put(c.getCity(), 1);
             }
         }
+
+        for (Map.Entry<String, Double> mapElement : cityAverageScore.entrySet()) {
+            String city = mapElement.getKey();
+            Double score = mapElement.getValue();
+            cityAverageScore.replace(city, score / numberOfCitizens.get(city));
+        }
+
+        childList.sort((o1, o2) -> {
+            if (cityAverageScore.get(o1.getCity()) > cityAverageScore.get(o2.getCity())) {
+                return -1;
+            } else if (cityAverageScore.get(o1.getCity()) < cityAverageScore.get(o2.getCity())) {
+                return 1;
+            }
+            return 0;
+        });
         return childList;
     }
 }
