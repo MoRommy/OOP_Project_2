@@ -30,24 +30,25 @@ public final class Factory {
     public static AnnualChildren processData(final InputData inputData) {
         AnnualChildren children = new AnnualChildren();
         distributeAnnualPresents(inputData, -1);
-        inputData.getInitialData().getChildren().sort(Comparator.comparing(Child::getId));
-        List<ChildDisplay> childs = new ArrayList<>();
-        for (Child c : inputData.getInitialData().getChildren()) {
-            childs.add(new ChildDisplay(c));
-        }
+        List<ChildDisplay> childs = getAnnualChildsDisplay(inputData);
         children.addAnualChildList(new ChildrenList(childs));
 
         for (int i  = 1; i <= inputData.getNumberOfYears(); i++) {
             updateAnnualChanges(inputData, i - 1);
             distributeAnnualPresents(inputData, i - 1);
-            inputData.getInitialData().getChildren().sort(Comparator.comparing(Child::getId));
-            List<ChildDisplay> childs2 = new ArrayList<>();
-            for (Child c : inputData.getInitialData().getChildren()) {
-                childs2.add(new ChildDisplay(c));
-            }
+            List<ChildDisplay> childs2 = getAnnualChildsDisplay(inputData);
             children.addAnualChildList(new ChildrenList(childs2));
         }
         return children;
+    }
+
+    private static List<ChildDisplay> getAnnualChildsDisplay(InputData inputData) {
+        inputData.getInitialData().getChildren().sort(Comparator.comparing(Child::getId));
+        List<ChildDisplay> childs = new ArrayList<>();
+        for (Child c : inputData.getInitialData().getChildren()) {
+            childs.add(new ChildDisplay(c));
+        }
+        return childs;
     }
 
     private static void updateAnnualChanges(final InputData inputData, final int year) {
@@ -135,21 +136,8 @@ public final class Factory {
         HashMap<String, Double> cityAverageScore = new HashMap<>();
         HashMap<String, Integer> numberOfCitizens = new HashMap<>();
         getCityScores(childList, cityAverageScore, numberOfCitizens);
-        sortChildsByCity(childList, cityAverageScore);
+        sortChildrenByTheirCityScore(childList, cityAverageScore);
         return childList;
-    }
-
-    private static void sortChildsByCity(final List<Child> childList,
-                                                final HashMap<String, Double> cityAverageScore) {
-        childList.sort((o1, o2) -> {
-            if (cityAverageScore.get(o1.getCity()) > cityAverageScore.get(o2.getCity())) {
-                return -1;
-            } else if (cityAverageScore.get(o1.getCity()) < cityAverageScore.get(o2.getCity())) {
-                return 1;
-            } else {
-                return o1.getCity().compareTo(o2.getCity());
-            }
-        });
     }
 
     private static void getCityScores(final List<Child> childList,
@@ -165,7 +153,7 @@ public final class Factory {
         for (Child c : childList) {
             if (cityAverageScore.containsKey(c.getCity())) {
                 cityAverageScore.replace(c.getCity(),
-                                        cityAverageScore.get(c.getCity()) + c.getAverageScore());
+                        cityAverageScore.get(c.getCity()) + c.getAverageScore());
                 numberOfCitizens.replace(c.getCity(), numberOfCitizens.get(c.getCity()) + 1);
             } else {
                 cityAverageScore.put(c.getCity(), c.getAverageScore());
@@ -181,5 +169,18 @@ public final class Factory {
             Double score = mapElement.getValue();
             cityAverageScore.replace(city, score / numberOfCitizens.get(city));
         }
+    }
+
+    private static void sortChildrenByTheirCityScore(final List<Child> childList,
+                                                     final HashMap<String, Double> cityAverageScore) {
+        childList.sort((o1, o2) -> {
+            if (cityAverageScore.get(o1.getCity()) > cityAverageScore.get(o2.getCity())) {
+                return -1;
+            } else if (cityAverageScore.get(o1.getCity()) < cityAverageScore.get(o2.getCity())) {
+                return 1;
+            } else {
+                return o1.getCity().compareTo(o2.getCity());
+            }
+        });
     }
 }

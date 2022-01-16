@@ -1,2 +1,5 @@
 Starting audit...
+[ERROR] C:\Users\stefa\Documents\Pregatire\OOP\oop-asignments\proiect2\.\src\data\Factory.java:45:62: Parameter inputData should be final. [FinalParameters]
+[ERROR] C:\Users\stefa\Documents\Pregatire\OOP\oop-asignments\proiect2\.\src\data\Factory.java:175: Line is longer than 100 characters (found 102). [LineLength]
 Audit done.
+Checkstyle ends with 2 errors.
